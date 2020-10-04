@@ -1,36 +1,41 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import utilities.BrowserFactory;
+import utilities.BrowserUtils;
+import utilities.Driver;
 
 public class BasicTest {
-    ChromeDriver driver;
+    WebDriver driver;
 
     @BeforeClass
     public void setUp() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-
+        driver = Driver.get("chrome");
+        BrowserUtils.wait(2);
+        driver.manage().window().maximize();
+        BrowserUtils.wait(2);
         driver.get("http://google.com");
+        BrowserUtils.wait(2);
+        driver.navigate().to("http://amazon.com");
+        BrowserUtils.wait(3);
+        driver.navigate().back();
+        BrowserUtils.wait(2);
+        driver.navigate().forward();
+        BrowserUtils.wait(2);
+        driver.navigate().refresh();
 
-    }
 
-
-    private void wait(int seconds) {
-        try {
-            Thread.sleep(1000 * seconds);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
 
     @Test
     public void randomTest() {
 
-        wait(2);
+        BrowserUtils.wait(2);
         String title = driver.getTitle();
 
         String expectedTitle = "Google";
@@ -54,7 +59,13 @@ public class BasicTest {
 
     @AfterClass
     public void tearDown() {
-        driver.close();
+        driver.quit();
+        Driver.close();
+
+
+
     }
+
+
 }
 
